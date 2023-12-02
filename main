@@ -1,0 +1,42 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+
+videolink = input("Enter Youtube Link: ")  # prompt user to enter a valid YouTube link
+qualityinput = input(
+    "What quality would you like to download the video in? (720/360): ")  # prompt user to choose the quality of the
+# video
+while qualityinput != "720" and qualityinput != "360":
+    print("Invalid resolution")
+    qualityinput = input(
+        "What quality would you like to download the video in? (720/360): ")  # keep asking until valid input
+
+service = Service(executable_path="chromedriver.exe")
+driver = webdriver.Chrome(service=service)
+
+driver.get("https://ssyoutube.com/")  # site used for downloading video
+
+time.sleep(1)
+
+input_element = driver.find_element(By.ID, "id_url")
+input_element.clear()
+input_element.send_keys(videolink)  # input video link in search box on site
+
+time.sleep(1)
+
+input_element.send_keys(Keys.ENTER)
+
+time.sleep(1)
+
+if qualityinput == "720":
+    btn = driver.find_element(By.ID, "download-mp4-720-audio")
+    btn.click()
+if qualityinput == "360":
+    btn = driver.find_element(By.ID, "download-mp4-360-audio")  # choose quality based on user input
+    btn.click()
+
+time.sleep(2000)
+
+driver.quit()
